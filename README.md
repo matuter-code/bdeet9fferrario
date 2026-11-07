@@ -1,125 +1,30 @@
-# TRABAJO PRÁCTICO Nº 4: MODELADO LÓGICO Y FÍSICO 
+preguntas:
 
-Este repositorio contiene la resolución integral del **Trabajo Práctico Nº 4**, abordando la transición desde el Modelo Entidad-Relación Conceptual hacia el **Modelo Lógico** (diseñado en Draw.io) y el **Modelo Físico Relacional** (diseñado con dbdiagram.io y tipado estático según los lineamientos de la cátedra).
+Ejercicio 1
 
----
+Acabas de empezar tu colección de películas y quieres hacer una base de datos para construir su ficha técnica. De cada película, necesitas su título, año, nacionalidad y algunos datos de su director: el nombre, la fecha de nacimiento y su país de origen. Además, quieres saber su idioma, si es en blanco y negro o en color, si tiene alguna restricción de edad, un resumen y poder poner tus propias observaciones. La ficha técnica de cada película también debe incluir el reparto de actores, donde aparecerá su nombre, su nacionalidad y el nombre del personaje que tiene en la película. Diseñar una base de datos que se ajuste al requerimiento arriba expuesto, identificando tablas, atributos, claves principales y relaciones existentes. 
 
-## 📌 Guía Teórica y Reglas de Transformación
 
-### 1. Transformaciones al Modelo Lógico
-- **Atributos Polivalentes (Multivaluados):** No existen en el modelo lógico; se convierten en una tabla independiente con relación `(1,1)` a `(1,n)` respecto a la entidad origen.
-- **Atributos Compuestos:** No existen en el modelo lógico; se descomponen en sus atributos atómicos simples dentro de la misma tabla (o se crean como tabla independiente según convenga).
-- **Jerarquías de Especialización/Generalización:** No existen en el modelo lógico; se transforman en relaciones binarias con cardinalidad `(0,1)` en la superentidad y `(1,1)` en las subentidades.
-- **Atributos Derivados:** Se excluyen del modelo lógico relacional, ya que se calculan en tiempo de ejecución.
+Ejercicio 2
 
-### 2. Reglas del Modelo Físico y Tipado Estático
-- **Tipado estático aplicado:** `VARCHAR`, `INTEGER`, `LONG`, `FLOAT`, `BIGFLOAT`, `BOOLEAN`, `DATE`, `TIMESTAMP`.
-- **Relaciones Uno a Muchos (1:N):** La clave primaria (`PK`) del lado "1" se propaga como clave foránea (`FK`) en la tabla del lado "N".
-- **Relaciones Muchos a Muchos (N:M):** Se resuelven creando una tabla intermedia (tabla puente) con claves foráneas apuntando a ambas entidades principales, más sus atributos propios.
-- **Relaciones Uno a Uno (1:1) y Jerarquías:** Se modelan mediante tablas separadas donde la `PK` de la entidad padre pasa como `[PK, FK]` a las entidades hijas especializadas.
+Se desea crear una base de datos que contenga información sobre las revistas a las que estás suscrito o compras habitualmente. De cada revista, se pide su título, el ISSN (un código que identifica a la publicación), el número y el año de publicación. También se desea almacenar información de cada uno de los artículos publicados: el título, la página de inicio y la página de fin. Se asume que no hay dos artículos con el mismo título. Cada artículo puede estar escrito por varios autores, de quienes interesa conocer su nombre, una dirección de correo electrónico y su adscripción, así como un número que indique la posición en la que aparece en cada artículo: un 1 si es el primer autor, un 2 si aparece en segundo lugar, etc. Diseñar una base de datos que se ajuste al requerimiento arriba expuesto, identificando tablas, atributos, claves principales y relaciones existentes. 
 
----
 
-## 🚀 Problema 1: Clientes, Pedidos, Artículos y Fábricas
+Ejercicio 3
 
-### 1. Modelo Lógico
-- **Multivaluado `Direcciones de envío` de Cliente:** Pasa a la tabla `DIRECCIONES_CLIENTE` vinculada `(1,1)` a `(1,n)` con `CLIENTE`.
-- **Compuesto `Dirección de envío` en Pedido:** Se aplana en `calle_envio`, `nro_envio`, `comuna_envio`, `ciudad_envio`.
-- **Derivado `Nº artículos provistos`:** Se elimina del modelo lógico.
+Una ONG desea elaborar una base de datos para llevar el seguimiento de todos sus proyectos. Tiene diversas sedes en varios países que se encargan de gestionar y coordinar los proyectos de ese país, cada uno de los cuales puede afectar a una o varias poblaciones. Sobre la sedes se desea mantener un identificador, la ciudad y país en el que se encuentra, junto co su dirección, un teléfono de contacto y el nombre del director. Cada sede gestiona un conjunto de proyectos, con un código, un título, fechas de inicio y finalización, el presupuesto asignado y el nombre del responsable. De cada proyecto es necesario conocer qué actuaciones se realizan en cada población, almacenando el nombre, país y nº de habitantes y un identificador para diferenciarlas. Además se desea la inversión del proyecto que corresponde a la población y una pequeña descripción de la actuación. 
 
-![Respuesta 1 - Modelo Lógico](respuesta%201.png)
 
-### 2. Modelo Físico (dbdiagram.io)
-```sql
-CLIENTE = ( id_cliente (PK): LONG, saldo: BIGFLOAT, limite_credito: BIGFLOAT, descuento: FLOAT )
-DIRECCIONES_CLIENTE = ( id_dir (PK): LONG, cliente_id (FK): LONG, calle: VARCHAR(255), numero: VARCHAR(20), comuna: VARCHAR(100), ciudad: VARCHAR(100) )
-PEDIDO = ( id_pedido (PK): LONG, cliente_id (FK): LONG, fecha: TIMESTAMP, calle_envio: VARCHAR(255), nro_envio: VARCHAR(20), comuna_envio: VARCHAR(100), ciudad_envio: VARCHAR(100) )
-ARTICULO = ( id_articulo (PK): LONG, descripcion: VARCHAR(255) )
-PEDIDO_ARTICULO = ( id (PK): LONG, pedido_id (FK): LONG, articulo_id (FK): LONG, cantidad: INTEGER )
-FABRICA = ( id_fabrica (PK): LONG, telefono: VARCHAR(50) )
-ARTICULO_FABRICA = ( id (PK): LONG, articulo_id (FK): LONG, fabrica_id (FK): LONG, existencias: INTEGER )
-```
+Ejercicio 4 
 
-![Respuesta 1 - Modelo Físico](respuesta%201%20modelado%20fisico.png)
+Una empresa de alquiler de vehículos desea conocer en todo momento el estado de su flota. La empresa tiene diversas oficinas repartidas por todo el territorio español. Cada oficina se identifica por un código único y se caracteriza por la ciudad en la que se encuentra y su dirección completa (calle, número y código postal) y teléfono. En cada oficina hay disponible un conjunto de coches, de los cuales se conoce su matrícula, el grupo al que pertenece: A, B, C, D, E, F o G (depende del tipo y tamaño del vehículo), la marca, el modelo, el número de puertas, el número de plazas, la capacidad del maletero y la edad mínima exigida para el alquiler. Para llevar el control del estado de cada vehículo, la empresa mantiene un registro de todos los alquileres que ha sufrido, indicando para cada uno de ellos el nombre del conductor, su DNI, su dirección, un teléfono de contacto y un número de tarjeta de crédito sobre la que realizar los cargos correspondientes. Además de esta información de los clientes, para cada alquiler se almacena su duración (en días), el tipo de seguro contratado y el precio total. 
 
----
 
-## 🚀 Problema 2: Proveedores, Categorías, Productos, Ventas y Clientes
+Ejercicio 6 
 
-### 1. Modelo Lógico
-- **Multivaluado `Teléfonos` de Cliente:** Pasa a la tabla `TELEFONO_CLIENTE` con relación `(1,1)` a `(1,n)` con `CLIENTE`.
-- **Compuestos `Dirección` en Proveedor y Cliente:** Aplanados a columnas atómicas (`calle`, `numero`, `comuna`, `ciudad`).
-- **Derivado `Monto Final` en Venta:** Descartado del modelo relacional.
+Un parque zoológico quiere construir una BD para organizar las especies que posee y los distintos itinerarios para visitar el parque. La información se estructura de la siguiente forma. De las especies, se desea conocer su nombre común y su nombre científico, así como una descripción general y una fotografía. Cada especie puede vivir en distintos hábitats naturales, definidos por su nombre, clima y vegetación predominante. Cada especie tiene asociado un índice de vulnerabilidad dentro de cada hábitat, que mide el riesgo de extinción de la especie en el dicho hábitat. Para organizar las visitas, y en función de los hábitats que desee recorrer un visitante, el parque le ofrece una serie de recorridos por los hábitats, que se identifican por su código y se caracterizan por su duración estimada, longitud y número máximo de visitantes permitidos. Un hábitat sólo puede formar parte de un itinerario. 
 
-![Respuesta 2 - Modelo Lógico](respuesta%202.png)
 
-### 2. Modelo Físico (dbdiagram.io)
-```sql
-CATEGORIA = ( id_categoria (PK): LONG, nombre: VARCHAR(100), descripcion: VARCHAR(255) )
-PROVEEDOR = ( rut (PK): LONG, nombre: VARCHAR(150), web: VARCHAR(255), telefono: VARCHAR(50), calle: VARCHAR(255), numero: VARCHAR(20), comuna: VARCHAR(100), ciudad: VARCHAR(100) )
-PRODUCTO = ( id_producto (PK): LONG, categoria_id (FK): LONG, proveedor_rut (FK): LONG, nombre: VARCHAR(150), precio: BIGFLOAT, stock: INTEGER )
-CLIENTE = ( rut (PK): LONG, nombre: VARCHAR(150), calle: VARCHAR(255), numero: VARCHAR(20), comuna: VARCHAR(100), ciudad: VARCHAR(100) )
-TELEFONO_CLIENTE = ( id_tel (PK): LONG, cliente_rut (FK): LONG, telefono: VARCHAR(50) )
-VENTA = ( id_venta (PK): LONG, cliente_rut (FK): LONG, fecha: TIMESTAMP, descuento: FLOAT )
-DETALLE_VENTA = ( id (PK): LONG, venta_id (FK): LONG, producto_id (FK): LONG, cantidad: INTEGER )
-```
+Ejercicio 5 
 
-![Respuesta 2 - Modelo Físico](respuesta%202%20modelado%20fisico.png)
-
----
-
-## 🚀 Problema 3: Sedes, Complejos (Jerarquía), Eventos y Comisarios (Jerarquía)
-
-### 1. Modelo Lógico
-- **Jerarquías:** Transformadas en relaciones binarias `(0,1)` a `(1,1)`:
-  - `Complejo` con `Unideportivo` y `Polideportivo`.
-  - `Comisario` con `Juez` y `Observador`.
-- **Multivaluado `Equipamiento` en Evento:** Pasa a la tabla `EQUIPAMIENTO_EVENTO` vinculada `(1,n)` a `(1,1)`.
-- **Derivados eliminados:** `#complejos` en Sede, `Area total` en Complejo y `#comisarios` en Evento.
-
-![Respuesta 3 - Modelo Lógico](respuesta%203.png)
-
-### 2. Modelo Físico (dbdiagram.io)
-```sql
-SEDE = ( id_sede (PK): LONG, presupuesto: BIGFLOAT )
-COMPLEJO = ( id_complejo (PK): LONG, sede_id (FK): LONG, localizacion: VARCHAR(255), jefe: VARCHAR(150) )
-UNIDEPORTIVO = ( id_complejo (PK, FK): LONG )
-POLIDEPORTIVO = ( id_complejo (PK, FK): LONG )
-AREA = ( id_area (PK): LONG, polideportivo_id (FK): LONG, localizacion: VARCHAR(255) )
-EVENTO = ( id_evento (PK): LONG, complejo_id (FK): LONG, fecha: TIMESTAMP, duracion: INTEGER, num_participantes: INTEGER )
-EQUIPAMIENTO_EVENTO = ( id_equip (PK): LONG, evento_id (FK): LONG, descripcion: VARCHAR(255) )
-COMISARIO = ( id_comisario (PK): LONG, nombre: VARCHAR(150) )
-EVENTO_COMISARIO = ( id (PK): LONG, evento_id (FK): LONG, comisario_id (FK): LONG )
-JUEZ = ( id_comisario (PK, FK): LONG )
-OBSERVADOR = ( id_comisario (PK, FK): LONG )
-```
-
-![Respuesta 3 - Modelo Físico](respuesta%203%20modelado%20fisico.png)
-
----
-
-## 🚀 Problema 4: Libros, Autores, Ediciones, Copias y Usuarios
-
-### 1. Modelo Lógico
-- **Entidad débil `Copia`:** Identificador primario y relación identificadora estricta `(1,1)` a `(1,n)` con `EDICION`.
-- **Relaciones N:M:** `autorea` conecta Autor y Libro, y `prestamo` conecta Copia y Usuario manteniendo los atributos `fecha_prestamo` y `fecha_devolucion`.
-
-![Respuesta 4 - Modelo Lógico](respuesta%204.png)
-
-### 2. Modelo Físico (dbdiagram.io)
-```sql
-AUTOR = ( id_autor (PK): LONG, nombre: VARCHAR(150) )
-LIBRO = ( id_libro (PK): LONG, titulo: VARCHAR(255) )
-AUTOR_LIBRO = ( id (PK): LONG, autor_id (FK): LONG, libro_id (FK): LONG )
-EDICION = ( isbn (PK): LONG, libro_id (FK): LONG, año: INTEGER, idioma: VARCHAR(50) )
-COPIA = ( id_copia (PK): LONG, edicion_isbn (FK): LONG, numero: INTEGER )
-USUARIO = ( rut (PK): LONG, nombre: VARCHAR(150) )
-PRESTAMO = ( id_prestamo (PK): LONG, copia_id (FK): LONG, usuario_rut (FK): LONG, fecha_prestamo: TIMESTAMP, fecha_devolucion: TIMESTAMP )
-```
-
-![Respuesta 4 - Modelo Físico](respuesta%204%20modelado%20fisico.png)
-
----
-
-## 💻 Código DBML para dbdiagram.io
-El archivo [dbdiagram_models.dbml](dbdiagram_models.dbml) contiene el código fuente en sintaxis DBML listo para ser copiado y pegado en [dbdiagram.io](https://dbdiagram.io/).
+Una clínica desea mantener una base de datos con el historial de todos los pacientes que tiene ingresados. La clínica está divida en varias unidades, cada una de las cuales tiene un identificador, su nombre y la planta en la que se encuentra. La unidad tiene un único doctor responsable, del cual se desea almacenar su código, el nombre y su especialidad. Cuando llega un paciente, se le ingresa en una unidad y se registra su número de la S.S., nombre, edad y fecha de ingreso. Durante toda su estancia en la clínica, se anotan todas las intervenciones que realizan cada uno de los doctores, indicando la fecha, el síntoma observado y el tratamiento prescrito
