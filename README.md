@@ -1,14 +1,6 @@
-# TRABAJO PRÁCTICO Nº 4: MODELADO LÓGICO Y FÍSICO DE BASES DE DATOS
+# TRABAJO PRÁCTICO Nº 4: MODELADO LÓGICO Y FÍSICO 
 
-## Reglas de Modelado Lógico Aplicadas
-1. **Atributos Polivalentes (Multivaluados):** No existen en el modelo lógico; se convierten en una tabla independiente con relación `(1,1)` a `(1,n)` respecto a la entidad origen.
-2. **Atributos Compuestos:** No existen en el modelo lógico; se descomponen en sus atributos atómicos simples dentro de la misma tabla (o se crean como tabla independiente según convenga).
-3. **Jerarquías de Especialización/Generalización:** No existen en el modelo lógico; se transforman en relaciones binarias con cardinalidad `(0,1)` en la superentidad y `(1,1)` en las subentidades.
-4. **Atributos Derivados:** Se excluyen del modelo lógico relacional, ya que se calculan en tiempo de ejecución.
-
----
-
-## Problema 1: Clientes, Pedidos, Artículos y Fábricas
+## Problema 1:
 - **Transformación de Multivaluado:** `Direcciones de envío` de Cliente pasa a la tabla `DIRECCIONES_CLIENTE` relacionada con `CLIENTE`.
 - **Transformación de Compuesto:** `Dirección de envío` en Pedido se aplana en `calle_envio`, `nro_envio`, `comuna_envio`, `ciudad_envio`.
 - **Atributo Derivado:** Se descarta `Nº artículos provistos` en Fábrica.
